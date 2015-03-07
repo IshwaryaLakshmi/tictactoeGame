@@ -15,6 +15,7 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 var w = 300;
 var h = 300;
+var lineDrawn = false;
 
 for (var i = w; i >= 0; i-=100) {
 	ctx.beginPath();
@@ -37,28 +38,55 @@ function toggle(x) {
  	return 'O'
  } 
  } 
- 
+
 function Create2DArray(rows) {
   var arr = [];
 
   for (var i=0;i<rows;i++) {
      arr[i] = [];
   }
-
   return arr;
 }
 
 function CheckResult(){
 	for (var i = 3 - 1; i >= 0; i--) {
-		CheckRRow(i);
-		CheckCColumn(i);
+		var resRow = CheckRRow(i);
+		if (resRow === true) {
+			ctx.beginPath();
+			ctx.moveTo(50, (i*100)+50);
+			ctx.lineTo(250, (i*100)+50);
+			ctx.stroke();
+			lineDrawn = true;
+		};
+		var resCol = CheckCColumn(i);
+		if (resCol === true) {
+			ctx.beginPath();
+			ctx.moveTo((i*100)+50, 50);
+			ctx.lineTo((i*100)+50, 250);
+			ctx.stroke();
+			lineDrawn = true;
+		};
 	};
-	CheckLeftDDiagonal();
-	CheckRightDDiagonal();
+		var resLD = CheckLeftDDiagonal();
+		if (resLD === true) {
+			ctx.beginPath();
+			ctx.moveTo(50, 50);
+			ctx.lineTo(250, 250);
+			ctx.stroke();
+			lineDrawn = true;
+		};
+		var resRD = CheckRightDDiagonal();
+		if (resRD === true) {
+			ctx.beginPath();
+			ctx.moveTo(250, 50);
+			ctx.lineTo(50, 250);
+			ctx.stroke();
+			lineDrawn = true;
+		};
 }
 
 function CheckCColumn(i){
-		var res ;
+		var res =false;
 		var q  = twoArray[i][2];
 		for (var j = 3 - 1; j >= 0; j--) {
 			var t = twoArray[i][j];
@@ -70,10 +98,8 @@ function CheckCColumn(i){
 			}
 			q=t;
 		};
-		console.log('col Checkssssss for	'+i);
-		console.log('col Ressultsss 	'+res);
 		if (res === true) {
-			return i;
+			return res;
 		};
 }
 
@@ -90,8 +116,9 @@ function CheckRRow(i){
 			}
 			q=t;
 		};
-		console.log('Row Checkssssss for	'+i);
-		console.log('Row Ressultsss 	'+res);
+		if (res === true) {
+			return res;
+		};
 }
 
 function CheckLeftDDiagonal(){
@@ -107,37 +134,55 @@ function CheckLeftDDiagonal(){
 			}
 		q=t;
 	};
-	console.log(res);
+	if (res === true) {
+			return res;
+	};
 }
 
 function CheckRightDDiagonal(){
-
+	var q = twoArray[2][0];
+	var res = false;
+	for (var i = 3 - 1; i >= 0; i--) {
+		var t = twoArray[2-i][i];
+		if ( q ===t && t!==undefined) {
+			res = true;
+		}else{
+			res = false;
+			break;
+		}
+		q=t;
+	};
+	if (res === true) {
+			return res;
+	};
 }
 
 var twoArray = Create2DArray(9);
- function assignToArray(x,y,parameter){
- 	console.log(x + ',' + y);
-	twoArray [x][y]=parameter;
+ function assignToArray(x,y,parameter,e){
 
-	console.log('Logging array');
-	for (var i = 3 - 1; i >= 0; i--) {
- 		console.log(twoArray[i][i] + ' 	' + '	'+i);
-	};
-		console.log('End ____________');
+	ctx.font='80px Arial';
+	var centerX = ((parseInt(e.clientX /100))*100)+20;
+	var centerY = ((parseInt(e.clientY /100))*100)+80;
+ 	
+ 	if (twoArray [x][y] === undefined) {
+ 			twoArray [x][y]=parameter;
+ 			ctx.fillText(t,centerX ,centerY);
+ 	};
+
+	// console.log('Logging array');
+	// for (var i = 3 - 1; i >= 0; i--) {
+ // 		console.log(twoArray[i][i] + ' 	' + '	'+i);
+	// };
+	// console.log('End ____________');
  } 
 
 var t = 'X'
 $(c).on('click', function (e) {
-console.log(e.clientX + ',' + e.clientY);
-console.log($(c).offset());
-ctx.font='80px Arial';
-var centerX = ((parseInt(e.clientX /100))*100)+20;
-var centerY = ((parseInt(e.clientY /100))*100)+80;
-console.log(centerX + ',' + centerY);
-assignToArray(parseInt(e.clientX /100),parseInt(e.clientY /100),t);
-ctx.fillText(t,centerX ,centerY);
-CheckResult();
-t = toggle(t);
+	if (lineDrawn === false) {
+		assignToArray(parseInt(e.clientX /100),parseInt(e.clientY /100),t,e);
+		CheckResult();
+		t = toggle(t);
+	};
 });
 
 var twoArray = Create2DArray(9);
