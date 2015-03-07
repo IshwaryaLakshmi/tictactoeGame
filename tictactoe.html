@@ -1,0 +1,151 @@
+<html>
+<head>
+	<title>TIcTacToe</title>
+	<link href="Assets/CSS/reset.css" rel="stylesheet"/>
+	<script type="text/javascript" src="Assets/JS/jQuery.js"></script>
+</head>
+
+<body>
+
+<canvas id="myCanvas" width="300" height="300" >
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var w = 300;
+var h = 300;
+
+for (var i = w; i >= 0; i-=100) {
+	ctx.beginPath();
+	ctx.moveTo(i, 0);
+	ctx.lineTo(i, w);
+	ctx.stroke();
+};
+
+for (var i = h; i >= 0; i-=100) {
+	ctx.beginPath();
+	ctx.moveTo(0, i);
+	ctx.lineTo(h, i);
+	ctx.stroke();
+};
+
+function toggle(x) {
+ if (x === 'O') {
+ 	return 'X';
+ }else{
+ 	return 'O'
+ } 
+ } 
+ 
+function Create2DArray(rows) {
+  var arr = [];
+
+  for (var i=0;i<rows;i++) {
+     arr[i] = [];
+  }
+
+  return arr;
+}
+
+function CheckResult(){
+	for (var i = 3 - 1; i >= 0; i--) {
+		CheckRRow(i);
+		CheckCColumn(i);
+	};
+	CheckLeftDDiagonal();
+	CheckRightDDiagonal();
+}
+
+function CheckCColumn(i){
+		var res ;
+		var q  = twoArray[i][2];
+		for (var j = 3 - 1; j >= 0; j--) {
+			var t = twoArray[i][j];
+			if (q === t && t !==undefined) {
+				res = true;
+			}else{
+				res = false;
+				break;
+			}
+			q=t;
+		};
+		console.log('col Checkssssss for	'+i);
+		console.log('col Ressultsss 	'+res);
+		if (res === true) {
+			return i;
+		};
+}
+
+function CheckRRow(i){
+		var res = false;
+		var q  = twoArray[2][i];
+		for (var j = 3 - 1; j >= 0; j--) {
+			var t = twoArray[j][i];
+			if (q === t && t !==undefined) {
+				res = true;
+			}else{
+				res = false;
+				break;
+			}
+			q=t;
+		};
+		console.log('Row Checkssssss for	'+i);
+		console.log('Row Ressultsss 	'+res);
+}
+
+function CheckLeftDDiagonal(){
+	var q = twoArray[0][0];
+	var res = false;
+	for (var i = 3 - 1; i >= 1; i--) {
+		var t = twoArray[i][i];
+			if (q===t && t !==undefined) {
+				res = true;
+			}else{
+				res = false;
+				break;
+			}
+		q=t;
+	};
+	console.log(res);
+}
+
+function CheckRightDDiagonal(){
+
+}
+
+var twoArray = Create2DArray(9);
+ function assignToArray(x,y,parameter){
+ 	console.log(x + ',' + y);
+	twoArray [x][y]=parameter;
+
+	console.log('Logging array');
+	for (var i = 3 - 1; i >= 0; i--) {
+ 		console.log(twoArray[i][i] + ' 	' + '	'+i);
+	};
+		console.log('End ____________');
+ } 
+
+var t = 'X'
+$(c).on('click', function (e) {
+console.log(e.clientX + ',' + e.clientY);
+console.log($(c).offset());
+ctx.font='80px Arial';
+var centerX = ((parseInt(e.clientX /100))*100)+20;
+var centerY = ((parseInt(e.clientY /100))*100)+80;
+console.log(centerX + ',' + centerY);
+assignToArray(parseInt(e.clientX /100),parseInt(e.clientY /100),t);
+ctx.fillText(t,centerX ,centerY);
+CheckResult();
+t = toggle(t);
+});
+
+var twoArray = Create2DArray(9);
+
+
+</script>
+
+</body>
+
+</html> 
+
